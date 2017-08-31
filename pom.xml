@@ -140,31 +140,6 @@
 	</dependencies>
 	<build>
 		<plugins>
-		<plugin>
-               <groupId>com.blackducksoftware.integration</groupId>
-               <artifactId>hub-maven-plugin</artifactId>
-               <version>1.0.4</version>
-               <inherited>false</inherited> 
-               <configuration>
-                 <target>${project.basedir}</target>
-               </configuration>
-               <executions>
-                   <execution>
-                       <id>create-bdio-file</id>
-                       <phase>package</phase>
-                       <goals>
-                           <goal>createHubOutput</goal>
-                       </goals>
-                   </execution>
-                   <execution>
-                       <id>deploy-bdio-file</id>
-                       <phase>verify</phase>
-                       <goals>
-                           <goal>deployHubOutput</goal>
-                       </goals>
-                   </execution>
-               </executions>
-            </plugin>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.9</version>

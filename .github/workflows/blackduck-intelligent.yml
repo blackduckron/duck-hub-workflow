@@ -27,6 +27,10 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
+      # Build Project
+      - name: Maven Package
+        run: mvn package
+
       # Run Synopsys Detect
       - name: Run Synopsys Detect
         uses: synopsys-sig/detect-action@main

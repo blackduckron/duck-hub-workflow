@@ -40,7 +40,7 @@ jobs:
         # Enable diagnostic mode
         env:
           DETECT_PROJECT_NAME: RdJ_DuckHub_Github
-          DETECT_DIAGNOSTIC: true
+          DETECT_DIAGNOSTIC: false
         #  DETECT_DIAGNOSTIC_EXTENDED: true
         with:
             scan-mode: INTELLIGENT

@@ -18,6 +18,7 @@
 		<hub.project.name>Duck Hub Demo</hub.project.name>
 	</properties>
 
+	
 	<dependencies>
 
 		<dependency>

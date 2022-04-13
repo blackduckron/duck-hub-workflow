@@ -20,7 +20,7 @@ jobs:
     # Runs special workflow steps for pull requests
     - name: Black Duck security scan for Pull Request
       if: ${{github.event_name == 'pull_request'}}
-      uses: matthewb66/blackduck-scan-directguidance@v3
+      uses: matthewb66/blackduck-scan-directguidance@v4
       with:
         url: ${{ secrets.BLACKDUCK_URL }}
         token: ${{ secrets.BLACKDUCK_API_TOKEN }}
@@ -30,14 +30,14 @@ jobs:
 #         detect_opts: detect.detector.buildless=true,detect.maven.buildless.legacy.mode=false
         output: blackduck-output
 #         debug: 9
-        sarif: blackduck-sarif.json
+#        sarif: blackduck-sarif.json
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
     # Runs special workflow steps for push
     - name: Black Duck security scan for Push
       if: ${{github.event_name == 'push'}}
-      uses: matthewb66/blackduck-scan-directguidance@v3
+      uses: matthewb66/blackduck-scan-directguidance@v4
       with:
         url: ${{ secrets.BLACKDUCK_URL }}
         token: ${{ secrets.BLACKDUCK_API_TOKEN }}
@@ -47,7 +47,7 @@ jobs:
 #         detect_opts: detect.detector.buildless=true,detect.maven.buildless.legacy.mode=false
         output: blackduck-output
 #         debug: 9
-        sarif: blackduck-sarif.json  
+#        sarif: blackduck-sarif.json  
       env:
         GITHUB_TOKEN: ${{ github.token }}
 

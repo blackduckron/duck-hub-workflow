@@ -17,6 +17,18 @@ jobs:
     steps:
     - uses: actions/checkout@v2
           
+    # Runs a Black Duck intelligent scan manually
+    # This will run a "full" or "intelligent" scan, logging new components in the Black Duck Hub server
+    # in order to provide real time notifications when new vulnerabilities are reported.
+    - name: Run Baseline Black Duck Scan (manual, workflow dispatch)
+      if: ${{github.event_name == 'workflow_dispatch'}}
+      uses: matthewb66/blackduck-scan-directguidance@v4
+      with:
+        url: ${{ secrets.BLACKDUCK_URL }}
+        token: ${{ secrets.BLACKDUCK_API_TOKEN }}
+        detect_opts: detect.project.name=RdJ_GHA_DuckHub
+        mode: intelligent
+
     # Runs special workflow steps for pull requests
     - name: Black Duck security scan for Pull Request
       if: ${{github.event_name == 'pull_request'}}

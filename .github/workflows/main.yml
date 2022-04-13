@@ -29,6 +29,8 @@ jobs:
         token: ${{ secrets.BLACKDUCK_API_TOKEN }}
         detect_opts: detect.project.name=RdJ_GHA_DuckHub
         mode: intelligent
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
 
     # Runs special workflow steps for pull requests
     - name: Black Duck security scan for Pull Request

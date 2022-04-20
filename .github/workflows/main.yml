@@ -23,31 +23,28 @@ jobs:
     # in order to provide real time notifications when new vulnerabilities are reported.
     - name: Run Baseline Black Duck Scan (manual, workflow dispatch)
       if: ${{github.event_name == 'workflow_dispatch'}}
-      uses: matthewb66/blackduck-scan-directguidance@v4
+      uses: synopsys-sig-community/blackduck-direct-scan-action@v1
       with:
-        url: ${{ secrets.BLACKDUCK_URL }}
-        token: ${{ secrets.BLACKDUCK_API_TOKEN }}
-        detect_opts: detect.project.name=RdJ_GHA_DuckHub
+        bd_url: ${{ secrets.BLACKDUCK_URL }}
+        bd_token: ${{ secrets.BLACKDUCK_API_TOKEN }}
+        project: RdJ_GHA_DuckHub
         mode: intelligent
-#      output: blackduck-output
-        debug: 9
-#        sarif: blackduck-sarif.json
+#        debug: 9
+        sarif: blackduck-sarif.json
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
     # Runs special workflow steps for pull requests
     - name: Black Duck security scan for Pull Request
       if: ${{github.event_name == 'pull_request'}}
-      uses: matthewb66/blackduck-scan-directguidance@v4
+      uses: synopsys-sig-community/blackduck-direct-scan-action@v1
       with:
-        url: ${{ secrets.BLACKDUCK_URL }}
-        token: ${{ secrets.BLACKDUCK_API_TOKEN }}
-        fix_pr: false
+        bd_url: ${{ secrets.BLACKDUCK_URL }}
+        bd_token: ${{ secrets.BLACKDUCK_API_TOKEN }}
         comment_on_pr: true
         upgrade_major: true
-        detect_opts: detect.project.name=RdJ_GHA_DuckHub
+        project: RdJ_GHA_DuckHub
 #         detect_opts: detect.detector.buildless=true,detect.maven.buildless.legacy.mode=false
-#         output: blackduck-output
 #         debug: 9
 #        sarif: blackduck-sarif.json
       env:
@@ -56,14 +53,13 @@ jobs:
     # Runs special workflow steps for push
     - name: Black Duck security scan for Push
       if: ${{github.event_name == 'push'}}
-      uses: matthewb66/blackduck-scan-directguidance@v4
+      uses: synopsys-sig-community/blackduck-direct-scan-action@v1
       with:
-        url: ${{ secrets.BLACKDUCK_URL }}
-        token: ${{ secrets.BLACKDUCK_API_TOKEN }}
+        bd_url: ${{ secrets.BLACKDUCK_URL }}
+        bd_token: ${{ secrets.BLACKDUCK_API_TOKEN }}
         fix_pr: true
-        comment_on_pr: false
         upgrade_major: true
-        detect_opts: detect.project.name=RdJ_GHA_DuckHub
+        project: RdJ_GHA_DuckHub
 #         detect_opts: detect.detector.buildless=true,detect.maven.buildless.legacy.mode=false
 #         output: blackduck-output
 #         debug: 9
@@ -79,7 +75,6 @@ jobs:
 
     - name: Upload SARIF file
       if: steps.check_files.outputs.files_exists == 'true'
- #     if: ${{github.event_name == 'pull_request'}}
       uses: github/codeql-action/upload-sarif@v1
       with:
         # Path to SARIF file relative to the root of the repository

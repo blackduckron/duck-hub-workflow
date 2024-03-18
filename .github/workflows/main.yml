@@ -50,7 +50,7 @@ jobs:
       env:
         DETECT_PROJECT_NAME: RDJ_GHA_DuckHub
         DETECT_PROJECT_VERSION_NAME: ${{ github.base_ref }}
-        # DETECT_CODE_LOCATION_NAME: RDJ-${{ github.event.repository.name }}-${{ github.base_ref }}
+        DETECT_CODE_LOCATION_NAME: RDJ-${{ github.event.repository.name }}-${{ github.base_ref }}
       with:
         blackduck_url: ${{ secrets.BLACKDUCK_URL }}
         blackduck_token: ${{ secrets.BLACKDUCK_API_TOKEN }}

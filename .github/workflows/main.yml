@@ -43,7 +43,7 @@ jobs:
         blackduck_reports_sarif_create: true
         blackduck_upload_sarif_report: true
         GITHUB_TOKEN: ${{ github.token }}
-        include_diagnostics: true
+        # include_diagnostics: true
     
     - name: Black Duck PR Scan
       if: ${{ github.event_name == 'pull_request' }}

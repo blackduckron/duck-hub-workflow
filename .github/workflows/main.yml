@@ -5,76 +5,30 @@ name: BD GH Action
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main, master, develop, stage, release ]
   pull_request:
-    branches: [ master ]
+    branches: [ main, master, develop, stage, release ]
   workflow_dispatch:
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: [ ubuntu-latest ]
 
     steps:
-    - uses: actions/checkout@v2
-          
-    # Runs a Black Duck intelligent scan manually
-    # This will run a "full" or "intelligent" scan, logging new components in the Black Duck Hub server
-    # in order to provide real time notifications when new vulnerabilities are reported.
-    - name: Run Baseline Black Duck Scan (manual, workflow dispatch)
-      if: ${{github.event_name == 'workflow_dispatch'}}
-      uses: synopsys-sig-community/blackduck-direct-scan-action@v1
-      with:
-        bd_url: ${{ secrets.BLACKDUCK_URL }}
-        bd_token: ${{ secrets.BLACKDUCK_API_TOKEN }}
-        project: RdJ_GHA_DuckHub
-        mode: intelligent
-        debug: 9
-#        sarif: blackduck-sarif.json
+    - name: Checkout Source
+      uses: actions/checkout@v4
+    
+    - name: Black Duck Full Scan
+      if: ${{ github.event_name != 'pull_request' }}
+      uses: synopsys-sig/synopsys-action@v1.8.0
       env:
+        DETECT_PROJECT_NAME: RDJ_GHA_DuckHub
+      with:
+        blackduck_url: ${{ secrets.BLACKDUCK_URL }}
+        blackduck_token: ${{ secrets.BLACKDUCK_API_TOKEN }}
+        blackduck_scan_full: true
+        blackduck_scan_failure_severities: 'BLOCKER,CRITICAL'
+        blackduck_reports_sarif_create: true
+        blackduck_upload_sarif_report: true
         GITHUB_TOKEN: ${{ github.token }}
-
-    # Runs special workflow steps for pull requests
-    - name: Black Duck security scan for Pull Request
-      if: ${{github.event_name == 'pull_request'}}
-      uses: synopsys-sig-community/blackduck-direct-scan-action@v1
-      with:
-        bd_url: ${{ secrets.BLACKDUCK_URL }}
-        bd_token: ${{ secrets.BLACKDUCK_API_TOKEN }}
-        comment_on_pr: true
-        upgrade_major: true
-        project: RdJ_GHA_DuckHub
-#         detect_opts: detect.detector.buildless=true,detect.maven.buildless.legacy.mode=false
-        debug: 9
-        sarif: blackduck-sarif.json
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-
-    # Runs special workflow steps for push
-    - name: Black Duck security scan for Push
-      if: ${{github.event_name == 'push'}}
-      uses: synopsys-sig-community/blackduck-direct-scan-action@v1
-      with:
-        bd_url: ${{ secrets.BLACKDUCK_URL }}
-        bd_token: ${{ secrets.BLACKDUCK_API_TOKEN }}
-        fix_pr: true
-        upgrade_major: true
-        project: RdJ_GHA_DuckHub
-#         detect_opts: detect.detector.buildless=true,detect.maven.buildless.legacy.mode=false
-        debug: 9
-        sarif: blackduck-sarif.json  
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-
-    - name: "Check file existence"
-      id: check_files
-      uses: andstor/file-existence-action@v1
-      with:
-        files: "blackduck-sarif.json"
-
-    - name: Upload SARIF file
-      if: steps.check_files.outputs.files_exists == 'true'
-      uses: github/codeql-action/upload-sarif@v1
-      with:
-        # Path to SARIF file relative to the root of the repository
-        sarif_file: blackduck-sarif.json
